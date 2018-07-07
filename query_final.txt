@@ -1,0 +1,45 @@
+Please find attached a stock data file with following schema:
+
+id,ex_change,stockname,sector,country,date,open,high,low,close,volume,adj_close
+
+hive> create database stock; 
+hive> use stock;
+hive> create table stock ( id int,ex_change string,stockname string,sector string,country string,stock_date date,open int,high int,low int,close int,volume int,adj_close int) row format delimited fields terminated by '\t';
+hive> load data local inpath '/home/hadoop/Desktop/stock_data_500000.txt' into table stock; 
+
+Please try to solve following use cases with different frameworks:
+
+Query using MapReduce, hive and Pig:
+1. Find top 5 "gainers" for a date.
+2. Count of stocks with sector = Healthcare and Manufacturing
+3. All stocks belonging to Asian stock ex_change
+4. Stocks with avg of high value > 10
+5. Sectors in germany with closing in range of 15 to 21
+
+1. Partition the data based on ex_change name
+2. Group data by stockname having open value greater than 16
+
+Solution
+
+1. select * from stock where stock_date="2009-12-16" order by high desc limit 5;
+2. hive> select count(*) from stock_par where sector="Healthcare" or sector="Manufacturing";
+   163901
+3. hive> select count(*) from stock_par where country="India" or country="Japan" or country="China" or country="indonesia";
+4. hive> select stockname,avg(high) from stock_par group by stockname;                   
+5. hive> select sector from stock_par where country="Germany" and close>15 and close<21;
+
+
+
+
+1. Partition Commands
+hive> create table stock_par (id int,ex_change string,stockname string,sector string,country string,stock_date date,open int,high int,low int,close int,volume 		int,adj_close int)                
+    > partitioned by (exchange_name string) row format delimited fields terminated by '\t';
+hive> SET hive.exec.dynamic.partition = true;
+hive> SET hive.exec.dynamic.partition.mode = nonstrict;
+hive> insert into table stock_par partition(exchange_name) select id,ex_change,stockname,sector,country, 
+    > stock_date,open,high,low,close,volume,adj_close,ex_change as exchange_name from stock;
+
+2. Group commands
+
+hive> select stockname,count(*)                                                                                  
+    > from stock_par where open>16 group by stockname;
