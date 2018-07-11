@@ -22,11 +22,11 @@ Query using hive:
 Solution
 
 1. select * from stock where stock_date="2009-11-30" order by high-low desc limit 5;
-2. hive> select count(*) from stock_par where sector="Healthcare" or sector="Manufacturing";
+2. hive> select count(*) from stock where sector="Healthcare" or sector="Manufacturing";
    163901
-3. hive> select count(*) from stock_par where country="India" or country="Japan" or country="China" or country="indonesia";
-4. hive> select stockname,avg(high) from stock_par where avg(high)>16 group by stockname;                   
-5. hive> select sector from stock_par where country="Germany" and close>15 and close<21;
+3. hive> select count(*) from stock where country="India" or country="Japan" or country="China" or country="indonesia";
+4. hive> select stockname,avg(high) from stock group by stockname having avg(high)>16;                  
+5. hive> select sector from stock where country="Germany" and close>15 and close<21;
 
 
 
