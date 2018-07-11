@@ -25,7 +25,7 @@ Solution
 2. hive> select count(*) from stock_par where sector="Healthcare" or sector="Manufacturing";
    163901
 3. hive> select count(*) from stock_par where country="India" or country="Japan" or country="China" or country="indonesia";
-4. hive> select stockname,avg(high) from stock_par group by stockname;                   
+4. hive> select stockname,avg(high) from stock_par where avg(high)>16 group by stockname;                   
 5. hive> select sector from stock_par where country="Germany" and close>15 and close<21;
 
 
